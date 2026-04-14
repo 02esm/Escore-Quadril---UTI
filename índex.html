@@ -1,0 +1,547 @@
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  min-height:100vh;
+}
+
+/* ─── HEADER ─── */
+header{
+  background:var(--ink);
+  color:#fff;
+  padding:28px 40px 24px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  position:relative;
+  overflow:hidden;
+}
+header::after{
+  content:'';
+  position:absolute;
+  right:-60px; top:-60px;
+  width:260px; height:260px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.08);
+}
+header::before{
+  content:'';
+  position:absolute;
+  right:20px; top:20px;
+  width:160px; height:160px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.06);
+}
+.header-tag{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.14em;
+  color:var(--accent);
+  text-transform:uppercase;
+  background:rgba(192,57,43,.15);
+  border:1px solid rgba(192,57,43,.35);
+  display:inline-block;
+  padding:3px 10px;
+  border-radius:4px;
+  width:fit-content;
+  margin-bottom:4px;
+}
+header h1{
+  font-family:var(--sans);
+  font-weight:600;
+  font-size:1.5rem;
+  line-height:1.3;
+  letter-spacing:-.02em;
+  position:relative;
+}
+header p{
+  font-size:12.5px;
+  color:rgba(255,255,255,.5);
+  font-weight:300;
+  position:relative;
+}
+header p strong{color:rgba(255,255,255,.75);font-weight:400}
+
+/* ─── MAIN ─── */
+main{max-width:780px;margin:0 auto;padding:36px 20px 80px}
+
+/* ─── PATIENT BLOCK ─── */
+.patient-card{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:22px 24px;
+  margin-bottom:28px;
+}
+.block-title{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--mid);
+  margin-bottom:16px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.block-title::after{
+  content:'';
+  flex:1;
+  height:1px;
+  background:var(--border);
+}
+.patient-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:14px;
+}
+.patient-grid .full{grid-column:1/-1}
+.patient-grid label{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  font-size:11.5px;
+  color:var(--mid);
+  font-weight:600;
+  letter-spacing:.03em;
+  text-transform:uppercase;
+}
+.patient-grid input, .patient-grid select{
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:7px;
+  padding:9px 12px;
+  font-family:var(--sans);
+  font-size:13.5px;
+  color:var(--ink);
+  outline:none;
+  transition:border-color .15s;
+}
+.patient-grid input:focus,.patient-grid select:focus{
+  border-color:var(--ink);
+  background:#fff;
+}
+
+/* ─── CRITERIA GROUP ─── */
+.criteria-section{
+  margin-bottom:24px;
+}
+.criteria-section-title{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--mid);
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.criteria-section-title::after{
+  content:'';
+  flex:1;
+  height:1px;
+  background:var(--border);
+}
+
+/* ─── ITEM ─── */
+.item{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:0;
+  margin-bottom:8px;
+  overflow:hidden;
+  transition:border-color .15s, box-shadow .15s;
+  cursor:pointer;
+  user-select:none;
+}
+.item:hover{border-color:#bbb}
+.item.checked{
+  border-color:var(--accent);
+  background:var(--accent-light);
+  box-shadow:0 0 0 1px var(--accent);
+}
+.item-inner{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:13px 18px;
+}
+.item-checkbox{
+  width:20px;
+  height:20px;
+  border-radius:5px;
+  border:2px solid var(--border);
+  background:var(--white);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  transition:all .15s;
+}
+.item.checked .item-checkbox{
+  background:var(--accent);
+  border-color:var(--accent);
+}
+.item-checkbox svg{
+  opacity:0;
+  transition:opacity .15s;
+}
+.item.checked .item-checkbox svg{opacity:1}
+.item-text{
+  flex:1;
+  font-size:13.5px;
+  line-height:1.45;
+  color:var(--ink);
+}
+.item.checked .item-text{font-weight:500}
+.item-badge{
+  font-family:var(--mono);
+  font-size:12px;
+  font-weight:600;
+  color:var(--mid);
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:3px 10px;
+  white-space:nowrap;
+  transition:all .15s;
+  flex-shrink:0;
+}
+.item.checked .item-badge{
+  color:var(--accent);
+  background:var(--white);
+  border-color:rgba(192,57,43,.3);
+}
+
+/* mutual exclusive pair note */
+.item-note{
+  font-size:11px;
+  color:var(--warn);
+  background:var(--warn-light);
+  padding:4px 18px;
+  border-top:1px solid rgba(230,126,34,.2);
+  font-family:var(--mono);
+  letter-spacing:.02em;
+}
+
+/* ─── SCORE PANEL ─── */
+.score-panel{
+  position:sticky;
+  bottom:20px;
+  background:var(--ink);
+  color:#fff;
+  border-radius:14px;
+  padding:18px 24px;
+  display:flex;
+  align-items:center;
+  gap:20px;
+  box-shadow:0 8px 40px rgba(0,0,0,.25);
+  margin-top:28px;
+  flex-wrap:wrap;
+}
+.score-display{
+  display:flex;
+  align-items:baseline;
+  gap:6px;
+}
+.score-number{
+  font-family:var(--mono);
+  font-size:2.6rem;
+  font-weight:600;
+  line-height:1;
+  transition:all .2s;
+}
+.score-label{
+< truncated lines 288-694 >
+    </div>
+  </div>
+
+  <!-- BLOCO 5: Cirúrgico / Hematológico / Anestésico -->
+  <div class="criteria-section">
+    <div class="criteria-section-title">Cirúrgico · Hematológico · Anestésico</div>
+
+    <div class="item" data-pts="3" data-id="reoperacao" onclick="toggle(this)">
+      <div class="item-inner">
+        <div class="item-checkbox">
+          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+            <path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="item-text">Mais de uma cirurgia de quadril no mesmo lado (reoperação)</span>
+        <span class="item-badge">+3 pts</span>
+      </div>
+    </div>
+
+    <div class="item" data-pts="3" data-id="anemia" onclick="toggle(this)">
+      <div class="item-inner">
+        <div class="item-checkbox">
+          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+            <path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="item-text">Hemoglobina &lt; 10 g/dL <em>ou</em> Hematócrito &lt; 30% <em>ou</em> transfusão sanguínea prévia à cirurgia</span>
+        <span class="item-badge">+3 pts</span>
+      </div>
+    </div>
+
+    <div class="item" data-pts="3" data-id="tot" onclick="toggle(this)">
+      <div class="item-inner">
+        <div class="item-checkbox">
+          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+            <path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="item-text">Previsão de intubação traqueal orotraqueal (TOT) durante a cirurgia</span>
+        <span class="item-badge">+3 pts</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- REF BOX -->
+  <div class="ref-box">
+    <strong>Referência:</strong> Scapin HP. Avaliação de fatores de risco pré-operatórios para internação em UTI em cirurgias de quadril. 
+    Trabalho de Conclusão de Residência — Hospital Universitário Cajuru / PUC-PR, 2025. 
+    CEP nº 7.658.825 (CAAE: 88847425.6.0000.0020).
+  </div>
+
+  <!-- SCORE STICKY PANEL -->
+  <div class="score-panel" id="scorePanel">
+    <div class="score-display">
+      <div>
+        <div class="score-label">Pontuação</div>
+        <div class="score-number" id="scoreNum">0</div>
+      </div>
+    </div>
+    <div class="score-divider"></div>
+    <div class="score-risk">
+      <div class="risk-pill low" id="riskPill">
+        <div class="dot"></div>
+        <span id="riskText">Baixo Risco</span>
+      </div>
+      <div class="risk-desc" id="riskDesc">≤ 7 pontos — não encaminhado à UTI</div>
+    </div>
+    <div class="score-panel-actions">
+      <button class="btn btn-ghost" onclick="clearAll()">Limpar</button>
+      <button class="btn btn-primary" onclick="openModal()">Ver Resultado &amp; Exportar</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Resultado da Avaliação Pré-Operatória</h2>
+      <p id="modalPatientLabel">—</p>
+    </div>
+    <div class="modal-body">
+      <div class="result-score-big">
+        <div class="result-num" id="modalScore">0</div>
+        <div class="result-info">
+          <strong id="modalRiskLabel">—</strong>
+          <span id="modalRiskDesc">—</span>
+        </div>
+      </div>
+      <div class="criteria-summary">
+        <h3>Critérios positivos</h3>
+        <div id="modalCriteriaList"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-dark" onclick="exportExcel()">⬇ Exportar Excel</button>
+      <button class="btn btn-outline" onclick="closeModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──
+const items = {};   // id -> {pts, label, checked}
+const mutexMap = {};
+
+// collect all items on load
+document.querySelectorAll('.item').forEach(el => {
+  const id  = el.dataset.id;
+  const pts = parseInt(el.dataset.pts);
+  const lbl = el.querySelector('.item-text').innerText.trim();
+  items[id] = { pts, label: lbl, checked: false, el };
+  if(el.dataset.mutex) mutexMap[id] = el.dataset.mutex;
+});
+
+// set today's date
+document.getElementById('data').valueAsDate = new Date();
+
+function toggle(el){
+  const id = el.dataset.id;
+  const state = items[id];
+
+  if(state.checked){
+    state.checked = false;
+    el.classList.remove('checked');
+  } else {
+    // handle mutex
+    const mxId = mutexMap[id];
+    if(mxId && items[mxId].checked){
+      items[mxId].checked = false;
+      items[mxId].el.classList.remove('checked');
+    }
+    state.checked = true;
+    el.classList.add('checked');
+  }
+  updateScore();
+}
+
+function calcScore(){
+  return Object.values(items).filter(i=>i.checked).reduce((s,i)=>s+i.pts,0);
+}
+
+function updateScore(){
+  const score = calcScore();
+  const high  = score > 7;
+  document.getElementById('scoreNum').textContent = score;
+  const pill  = document.getElementById('riskPill');
+  pill.className = 'risk-pill ' + (high ? 'high' : 'low');
+  document.getElementById('riskText').textContent  = high ? 'Alto Risco' : 'Baixo Risco';
+  document.getElementById('riskDesc').textContent  = high
+    ? '> 7 pontos — encaminhamento para UTI recomendado'
+    : '≤ 7 pontos — não encaminhado à UTI';
+}
+
+function clearAll(){
+  Object.values(items).forEach(i=>{
+    i.checked = false;
+    i.el.classList.remove('checked');
+  });
+  updateScore();
+}
+
+function getChecked(){
+  return Object.values(items).filter(i=>i.checked);
+}
+
+function openModal(){
+  const score   = calcScore();
+  const high    = score > 7;
+  const nome    = document.getElementById('nome').value || 'Não informado';
+  const pront   = document.getElementById('prontuario').value;
+  const data    = document.getElementById('data').value;
+  const checked = getChecked();
+
+  document.getElementById('modalScore').textContent = score;
+  document.getElementById('modalScore').className = 'result-num ' + (high ? 'high' : 'low');
+  document.getElementById('modalRiskLabel').innerHTML =
+    '<span class="'+(high?'high':'low')+'">'+(high?'ALTO RISCO – Indicar UTI':'BAIXO RISCO – Sem necessidade de UTI')+'</span>';
+  document.getElementById('modalRiskDesc').textContent =
+    high ? 'Pontuação > 7: encaminhamento para UTI pós-operatória recomendado.'
+         : 'Pontuação ≤ 7: paciente classificado como baixo risco para necessidade de UTI.';
+  document.getElementById('modalPatientLabel').textContent =
+    nome + (pront ? ' · Prontuário: ' + pront : '') + (data ? ' · ' + formatDate(data) : '');
+
+  const list = document.getElementById('modalCriteriaList');
+  list.innerHTML = '';
+  if(checked.length===0){
+    list.innerHTML = '<div class="no-criteria">Nenhum critério selecionado</div>';
+  } else {
+    checked.forEach(i=>{
+      const row = document.createElement('div');
+      row.className = 'crit-row';
+      row.innerHTML = `<span class="crit-name">${i.label}</span><span class="crit-pts">+${i.pts} pts</span>`;
+      list.appendChild(row);
+    });
+    // total row
+    const tot = document.createElement('div');
+    tot.className = 'crit-row';
+    tot.style.fontWeight='600';
+    tot.innerHTML = `<span class="crit-name">TOTAL</span><span class="crit-pts" style="color:var(--ink)">${score} pts</span>`;
+    list.appendChild(tot);
+  }
+
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+document.getElementById('modalOverlay').addEventListener('click', e=>{
+  if(e.target===e.currentTarget) closeModal();
+});
+
+function formatDate(str){
+  if(!str) return '';
+  const [y,m,d] = str.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+function exportExcel(){
+  const score   = calcScore();
+  const high    = score > 7;
+  const nome    = document.getElementById('nome').value    || '';
+  const pront   = document.getElementById('prontuario').value || '';
+  const data    = document.getElementById('data').value    || '';
+  const cirurgia= document.getElementById('cirurgia').value || '';
+  const avaliador=document.getElementById('avaliador').value || '';
+  const checked = getChecked();
+
+  const wb = XLSX.utils.book_new();
+
+  /* ─ Sheet 1: Resumo ─ */
+  const resumo = [
+    ['ESCORE DE RISCO PRÉ-OPERATÓRIO PARA INTERNAÇÃO EM UTI – CIRURGIAS DE QUADRIL'],
+    ['Referência: Scapin HP, Hospital Universitário Cajuru / PUC-PR, 2025'],
+    [],
+    ['DADOS DO PACIENTE'],
+    ['Nome',          nome],
+    ['Prontuário',    pront],
+    ['Data de avaliação', formatDate(data)],
+    ['Tipo de cirurgia',  cirurgia],
+    ['Avaliador',    avaliador],
+    [],
+    ['RESULTADO'],
+    ['Pontuação total',    score],
+    ['Classificação',     high ? 'ALTO RISCO (> 7 pts) – Encaminhamento para UTI recomendado'
+                               : 'BAIXO RISCO (≤ 7 pts) – Sem necessidade de UTI'],
+    [],
+    ['CRITÉRIOS POSITIVOS'],
+    ['Critério', 'Pontuação'],
+    ...checked.map(i=>[i.label, i.pts]),
+    checked.length===0 ? ['Nenhum critério selecionado', ''] : [],
+    [],
+    ['TOTAL', score],
+  ].filter(r=>r!==undefined);
+
+  const ws1 = XLSX.utils.aoa_to_sheet(resumo);
+  ws1['!cols'] = [{wch:62},{wch:20}];
+  XLSX.utils.book_append_sheet(wb, ws1, 'Resultado');
+
+  /* ─ Sheet 2: Todos os critérios ─ */
+  const allRows = [
+    ['TABELA COMPLETA DO ESCORE'],
+    [],
+    ['Critério', 'Pontuação possível', 'Selecionado', 'Pontuação aplicada'],
+    ...Object.values(items).map(i=>[
+      i.label,
+      i.pts,
+      i.checked ? 'SIM' : 'NÃO',
+      i.checked ? i.pts : 0,
+    ]),
+    [],
+    ['','','TOTAL APLICADO', score],
+    ['','','Estratificação', high ? '> 7 pts → UTI' : '≤ 7 pts → Sem UTI'],
+  ];
+  const ws2 = XLSX.utils.aoa_to_sheet(allRows);
+  ws2['!cols'] = [{wch:62},{wch:22},{wch:14},{wch:18}];
+  XLSX.utils.book_append_sheet(wb, ws2, 'Critérios Completos');
+
+  const fileName = `Escore_UTI_Quadril_${(nome||'paciente').replace(/\s+/g,'_')}_${data||'sem_data'}.xlsx`;
+  XLSX.writeFile(wb, fileName);
+}
+</script>
+</body>
+</html>
