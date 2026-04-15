@@ -7,504 +7,110 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap');
-
 :root{
-  --bg:#f5f4f0;
-  --white:#ffffff;
-  --ink:#111111;
-  --mid:#555555;
-  --light:#aaaaaa;
-  --border:#d8d6d0;
-  --accent:#c0392b;
-  --accent-light:#fbeae8;
-  --safe:#1a6e3c;
-  --safe-light:#e8f5ee;
-  --warn:#e67e22;
-  --warn-light:#fef3e7;
-  --tag:#111111;
-  --mono:'IBM Plex Mono',monospace;
-  --sans:'IBM Plex Sans',sans-serif;
-  --radius:10px;
+  --bg:#f5f4f0;--white:#ffffff;--ink:#111111;--mid:#555555;--light:#aaaaaa;
+  --border:#d8d6d0;--accent:#c0392b;--accent-light:#fbeae8;
+  --safe:#1a6e3c;--safe-light:#e8f5ee;--warn:#e67e22;--warn-light:#fef3e7;
+  --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;--radius:10px;
 }
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:15px}
-body{
-  background:var(--bg);
-  color:var(--ink);
-  font-family:var(--sans);
-  min-height:100vh;
-}
-
-/* ─── HEADER ─── */
-header{
-  background:var(--ink);
-  color:#fff;
-  padding:28px 40px 24px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  position:relative;
-  overflow:hidden;
-}
-header::after{
-  content:'';
-  position:absolute;
-  right:-60px; top:-60px;
-  width:260px; height:260px;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,.08);
-}
-header::before{
-  content:'';
-  position:absolute;
-  right:20px; top:20px;
-  width:160px; height:160px;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,.06);
-}
-.header-tag{
-  font-family:var(--mono);
-  font-size:10px;
-  letter-spacing:.14em;
-  color:var(--accent);
-  text-transform:uppercase;
-  background:rgba(192,57,43,.15);
-  border:1px solid rgba(192,57,43,.35);
-  display:inline-block;
-  padding:3px 10px;
-  border-radius:4px;
-  width:fit-content;
-  margin-bottom:4px;
-}
-header h1{
-  font-family:var(--sans);
-  font-weight:600;
-  font-size:1.5rem;
-  line-height:1.3;
-  letter-spacing:-.02em;
-  position:relative;
-}
-header p{
-  font-size:12.5px;
-  color:rgba(255,255,255,.5);
-  font-weight:300;
-  position:relative;
-}
-header p strong{color:rgba(255,255,255,.75);font-weight:400}
-
-/* ─── MAIN ─── */
-main{max-width:780px;margin:0 auto;padding:36px 20px 80px}
-
-/* ─── PATIENT BLOCK ─── */
-.patient-card{
-  background:var(--white);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:22px 24px;
-  margin-bottom:28px;
-}
-.block-title{
-  font-family:var(--mono);
-  font-size:10px;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  color:var(--mid);
-  margin-bottom:16px;
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-.block-title::after{
-  content:'';
-  flex:1;
-  height:1px;
-  background:var(--border);
-}
-.patient-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:14px;
-}
-.patient-grid .full{grid-column:1/-1}
-.patient-grid label{
-  display:flex;
-  flex-direction:column;
-  gap:5px;
-  font-size:11.5px;
-  color:var(--mid);
-  font-weight:600;
-  letter-spacing:.03em;
-  text-transform:uppercase;
-}
-.patient-grid input, .patient-grid select{
-  background:var(--bg);
-  border:1px solid var(--border);
-  border-radius:7px;
-  padding:9px 12px;
-  font-family:var(--sans);
-  font-size:13.5px;
-  color:var(--ink);
-  outline:none;
-  transition:border-color .15s;
-}
-.patient-grid input:focus,.patient-grid select:focus{
-  border-color:var(--ink);
-  background:#fff;
-}
-
-/* ─── CRITERIA GROUP ─── */
-.criteria-section{
-  margin-bottom:24px;
-}
-.criteria-section-title{
-  font-family:var(--mono);
-  font-size:10px;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  color:var(--mid);
-  margin-bottom:12px;
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-.criteria-section-title::after{
-  content:'';
-  flex:1;
-  height:1px;
-  background:var(--border);
-}
-
-/* ─── ITEM ─── */
-.item{
-  background:var(--white);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:0;
-  margin-bottom:8px;
-  overflow:hidden;
-  transition:border-color .15s, box-shadow .15s;
-  cursor:pointer;
-  user-select:none;
-}
-.item:hover{border-color:#bbb}
-.item.checked{
-  border-color:var(--accent);
-  background:var(--accent-light);
-  box-shadow:0 0 0 1px var(--accent);
-}
-.item-inner{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  padding:13px 18px;
-}
-.item-checkbox{
-  width:20px;
-  height:20px;
-  border-radius:5px;
-  border:2px solid var(--border);
-  background:var(--white);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-shrink:0;
-  transition:all .15s;
-}
-.item.checked .item-checkbox{
-  background:var(--accent);
-  border-color:var(--accent);
-}
-.item-checkbox svg{
-  opacity:0;
-  transition:opacity .15s;
-}
-.item.checked .item-checkbox svg{opacity:1}
-.item-text{
-  flex:1;
-  font-size:13.5px;
-  line-height:1.45;
-  color:var(--ink);
-}
-.item.checked .item-text{font-weight:500}
-.item-badge{
-  font-family:var(--mono);
-  font-size:12px;
-  font-weight:600;
-  color:var(--mid);
-  background:var(--bg);
-  border:1px solid var(--border);
-  border-radius:6px;
-  padding:3px 10px;
-  white-space:nowrap;
-  transition:all .15s;
-  flex-shrink:0;
-}
-.item.checked .item-badge{
-  color:var(--accent);
-  background:var(--white);
-  border-color:rgba(192,57,43,.3);
-}
-
-/* mutual exclusive pair note */
-.item-note{
-  font-size:11px;
-  color:var(--warn);
-  background:var(--warn-light);
-  padding:4px 18px;
-  border-top:1px solid rgba(230,126,34,.2);
-  font-family:var(--mono);
-  letter-spacing:.02em;
-}
-
-/* ─── SCORE PANEL ─── */
-.score-panel{
-  position:sticky;
-  bottom:20px;
-  background:var(--ink);
-  color:#fff;
-  border-radius:14px;
-  padding:18px 24px;
-  display:flex;
-  align-items:center;
-  gap:20px;
-  box-shadow:0 8px 40px rgba(0,0,0,.25);
-  margin-top:28px;
-  flex-wrap:wrap;
-}
-.score-display{
-  display:flex;
-  align-items:baseline;
-  gap:6px;
-}
-.score-number{
-  font-family:var(--mono);
-  font-size:2.6rem;
-  font-weight:600;
-  line-height:1;
-  transition:all .2s;
-}
-.score-label{
-  font-size:11px;
-  color:rgba(255,255,255,.4);
-  letter-spacing:.06em;
-  text-transform:uppercase;
-}
-.score-divider{
-  width:1px;
-  height:48px;
-  background:rgba(255,255,255,.1);
-}
-.score-risk{
-  flex:1;
-}
-.risk-pill{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  border-radius:999px;
-  padding:6px 16px;
-  font-size:13px;
-  font-weight:600;
-  letter-spacing:.02em;
-  transition:all .3s;
-}
-.risk-pill.low{
-  background:var(--safe-light);
-  color:var(--safe);
-}
-.risk-pill.high{
-  background:var(--accent-light);
-  color:var(--accent);
-}
-.risk-pill .dot{
-  width:8px;height:8px;
-  border-radius:50%;
-  animation:pulse 1.5s infinite;
-}
-.risk-pill.low .dot{background:var(--safe)}
-.risk-pill.high .dot{background:var(--accent)}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;}
+header{background:var(--ink);color:#fff;padding:28px 40px 24px;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden;}
+header::after{content:'';position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;border:1px solid rgba(255,255,255,.08);}
+header::before{content:'';position:absolute;right:20px;top:20px;width:160px;height:160px;border-radius:50%;border:1px solid rgba(255,255,255,.06);}
+.header-tag{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--accent);text-transform:uppercase;background:rgba(192,57,43,.15);border:1px solid rgba(192,57,43,.35);display:inline-block;padding:3px 10px;border-radius:4px;width:fit-content;margin-bottom:4px;}
+header h1{font-family:var(--sans);font-weight:600;font-size:1.5rem;line-height:1.3;letter-spacing:-.02em;position:relative;}
+header p{font-size:12.5px;color:rgba(255,255,255,.5);font-weight:300;position:relative;}
+header p strong{color:rgba(255,255,255,.75);font-weight:400;}
+main{max-width:780px;margin:0 auto;padding:36px 20px 100px;}
+.patient-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;margin-bottom:28px;}
+.block-title{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mid);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.block-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.patient-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.patient-grid .full{grid-column:1/-1;}
+.patient-grid label{display:flex;flex-direction:column;gap:5px;font-size:11.5px;color:var(--mid);font-weight:600;letter-spacing:.03em;text-transform:uppercase;}
+.patient-grid input,.patient-grid select{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:9px 12px;font-family:var(--sans);font-size:13.5px;color:var(--ink);outline:none;transition:border-color .15s;}
+.patient-grid input:focus,.patient-grid select:focus{border-color:var(--ink);background:#fff;}
+.criteria-section{margin-bottom:24px;}
+.criteria-section-title{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mid);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.criteria-section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.item{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:0;margin-bottom:8px;overflow:hidden;transition:border-color .15s,box-shadow .15s;cursor:pointer;user-select:none;}
+.item:hover{border-color:#bbb;}
+.item.checked{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 1px var(--accent);}
+.item-inner{display:flex;align-items:center;gap:14px;padding:13px 18px;}
+.item-checkbox{width:20px;height:20px;border-radius:5px;border:2px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
+.item.checked .item-checkbox{background:var(--accent);border-color:var(--accent);}
+.item-checkbox svg{opacity:0;transition:opacity .15s;}
+.item.checked .item-checkbox svg{opacity:1;}
+.item-text{flex:1;font-size:13.5px;line-height:1.45;color:var(--ink);}
+.item.checked .item-text{font-weight:500;}
+.item-badge{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--mid);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:3px 10px;white-space:nowrap;transition:all .15s;flex-shrink:0;}
+.item.checked .item-badge{color:var(--accent);background:var(--white);border-color:rgba(192,57,43,.3);}
+.item-note{font-size:11px;color:var(--warn);background:var(--warn-light);padding:4px 18px;border-top:1px solid rgba(230,126,34,.2);font-family:var(--mono);letter-spacing:.02em;}
+.score-panel{position:sticky;bottom:20px;background:var(--ink);color:#fff;border-radius:14px;padding:18px 24px;display:flex;align-items:center;gap:20px;box-shadow:0 8px 40px rgba(0,0,0,.25);margin-top:28px;flex-wrap:wrap;}
+.score-display{display:flex;align-items:baseline;gap:6px;}
+.score-number{font-family:var(--mono);font-size:2.6rem;font-weight:600;line-height:1;transition:all .2s;}
+.score-label{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;}
+.score-divider{width:1px;height:48px;background:rgba(255,255,255,.1);}
+.score-risk{flex:1;}
+.risk-pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:6px 16px;font-size:13px;font-weight:600;letter-spacing:.02em;transition:all .3s;}
+.risk-pill.low{background:var(--safe-light);color:var(--safe);}
+.risk-pill.high{background:var(--accent-light);color:var(--accent);}
+.risk-pill .dot{width:8px;height:8px;border-radius:50%;animation:pulse 1.5s infinite;}
+.risk-pill.low .dot{background:var(--safe);}
+.risk-pill.high .dot{background:var(--accent);}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.risk-desc{
-  font-size:11.5px;
-  color:rgba(255,255,255,.45);
-  margin-top:4px;
-}
-.score-panel-actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
-.btn{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:10px 20px;
-  border-radius:8px;
-  font-family:var(--sans);
-  font-size:13px;
-  font-weight:600;
-  cursor:pointer;
-  border:none;
-  transition:all .15s;
-  white-space:nowrap;
-}
-.btn-primary{
-  background:var(--accent);
-  color:#fff;
-}
-.btn-primary:hover{background:#a93226}
-.btn-ghost{
-  background:rgba(255,255,255,.08);
-  color:rgba(255,255,255,.75);
-  border:1px solid rgba(255,255,255,.12);
-}
-.btn-ghost:hover{background:rgba(255,255,255,.14)}
-
-/* ─── RESULTS MODAL ─── */
-.modal-overlay{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  backdrop-filter:blur(4px);
-  z-index:200;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-}
-.modal-overlay.open{display:flex}
-.modal{
-  background:var(--white);
-  border-radius:16px;
-  max-width:520px;
-  width:100%;
-  overflow:hidden;
-  box-shadow:0 24px 80px rgba(0,0,0,.3);
-  animation:slideUp .25s ease;
-}
+.risk-desc{font-size:11.5px;color:rgba(255,255,255,.45);margin-top:4px;}
+.score-panel-actions{display:flex;gap:10px;flex-wrap:wrap;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:8px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;white-space:nowrap;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{background:#a93226;}
+.btn-ghost{background:rgba(255,255,255,.08);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.12);}
+.btn-ghost:hover{background:rgba(255,255,255,.14);}
+.btn:disabled{opacity:.6;cursor:not-allowed;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--white);border-radius:16px;max-width:520px;width:100%;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.3);animation:slideUp .25s ease;}
 @keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
-.modal-head{
-  background:var(--ink);
-  color:#fff;
-  padding:22px 28px;
-}
-.modal-head h2{
-  font-family:var(--sans);
-  font-size:1.1rem;
-  font-weight:600;
-}
-.modal-head p{
-  font-size:12px;
-  color:rgba(255,255,255,.45);
-  margin-top:4px;
-}
-.modal-body{padding:28px}
-.result-score-big{
-  display:flex;
-  align-items:center;
-  gap:20px;
-  margin-bottom:24px;
-  padding:18px;
-  border-radius:10px;
-  background:var(--bg);
-  border:1px solid var(--border);
-}
-.result-num{
-  font-family:var(--mono);
-  font-size:3.5rem;
-  font-weight:600;
-  line-height:1;
-}
-.result-num.high{color:var(--accent)}
-.result-num.low{color:var(--safe)}
-.result-info strong{
-  font-size:1rem;
-  display:block;
-  margin-bottom:4px;
-}
-.result-info span{
-  font-size:12.5px;
-  color:var(--mid);
-}
-.result-info .high{color:var(--accent)}
-.result-info .low{color:var(--safe)}
-
-.criteria-summary{
-  margin-bottom:24px;
-}
-.criteria-summary h3{
-  font-family:var(--mono);
-  font-size:10px;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  color:var(--mid);
-  margin-bottom:10px;
-}
-.crit-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:7px 0;
-  border-bottom:1px solid var(--border);
-  font-size:12.5px;
-  gap:12px;
-}
-.crit-row:last-child{border-bottom:none}
-.crit-name{flex:1;color:var(--ink)}
-.crit-pts{
-  font-family:var(--mono);
-  font-weight:600;
-  color:var(--accent);
-  min-width:40px;
-  text-align:right;
-}
-.no-criteria{
-  font-size:13px;
-  color:var(--light);
-  font-style:italic;
-  text-align:center;
-  padding:14px 0;
-}
-.modal-foot{
-  display:flex;
-  gap:10px;
-  padding:0 28px 24px;
-}
-.btn-dark{
-  background:var(--ink);
-  color:#fff;
-  border:none;
-}
-.btn-dark:hover{background:#333}
-.btn-outline{
-  background:transparent;
-  color:var(--mid);
-  border:1px solid var(--border);
-}
-.btn-outline:hover{background:var(--bg)}
-
-/* sessions table in results */
-.ref-box{
-  background:var(--bg);
-  border:1px dashed var(--border);
-  border-radius:8px;
-  padding:12px 16px;
-  font-size:11.5px;
-  color:var(--mid);
-  margin-bottom:24px;
-  line-height:1.6;
-}
-.ref-box strong{color:var(--ink)}
-
-/* responsive */
+.modal-head{background:var(--ink);color:#fff;padding:22px 28px;}
+.modal-head h2{font-family:var(--sans);font-size:1.1rem;font-weight:600;}
+.modal-head p{font-size:12px;color:rgba(255,255,255,.45);margin-top:4px;}
+.modal-body{padding:28px;}
+.result-score-big{display:flex;align-items:center;gap:20px;margin-bottom:24px;padding:18px;border-radius:10px;background:var(--bg);border:1px solid var(--border);}
+.result-num{font-family:var(--mono);font-size:3.5rem;font-weight:600;line-height:1;}
+.result-num.high{color:var(--accent);}
+.result-num.low{color:var(--safe);}
+.result-info strong{font-size:1rem;display:block;margin-bottom:4px;}
+.result-info span{font-size:12.5px;color:var(--mid);}
+.result-info .high{color:var(--accent);}
+.result-info .low{color:var(--safe);}
+.criteria-summary{margin-bottom:24px;}
+.criteria-summary h3{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);margin-bottom:10px;}
+.crit-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12.5px;gap:12px;}
+.crit-row:last-child{border-bottom:none;}
+.crit-name{flex:1;color:var(--ink);}
+.crit-pts{font-family:var(--mono);font-weight:600;color:var(--accent);min-width:40px;text-align:right;}
+.no-criteria{font-size:13px;color:var(--light);font-style:italic;text-align:center;padding:14px 0;}
+.modal-foot{display:flex;gap:10px;padding:0 28px 24px;flex-wrap:wrap;}
+.btn-dark{background:var(--ink);color:#fff;border:none;}
+.btn-dark:hover{background:#333;}
+.btn-green{background:var(--safe);color:#fff;border:none;}
+.btn-green:hover{background:#145c32;}
+.btn-outline{background:transparent;color:var(--mid);border:1px solid var(--border);}
+.btn-outline:hover{background:var(--bg);}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 24px;border-radius:999px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:all .3s;z-index:999;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.success{background:var(--safe);}
+.toast.error{background:var(--accent);}
+.ref-box{background:var(--bg);border:1px dashed var(--border);border-radius:8px;padding:12px 16px;font-size:11.5px;color:var(--mid);margin-bottom:24px;line-height:1.6;}
+.ref-box strong{color:var(--ink);}
 @media(max-width:600px){
-  header{padding:20px}
-  .patient-grid{grid-template-columns:1fr 1fr}
-  .patient-grid .full{grid-column:1/-1}
-  .patient-grid label:nth-child(3){grid-column:1/-1}
-  .score-panel{flex-direction:column;align-items:flex-start}
-  .score-divider{display:none}
+  header{padding:20px;}
+  .patient-grid{grid-template-columns:1fr 1fr;}
+  .patient-grid .full{grid-column:1/-1;}
+  .score-panel{flex-direction:column;align-items:flex-start;}
+  .score-divider{display:none;}
 }
 </style>
 </head>
@@ -517,8 +123,6 @@ main{max-width:780px;margin:0 auto;padding:36px 20px 80px}
 </header>
 
 <main>
-
-  <!-- DADOS DO PACIENTE -->
   <div class="patient-card">
     <div class="block-title">Identificação do Paciente</div>
     <div class="patient-grid">
@@ -548,84 +152,51 @@ main{max-width:780px;margin:0 auto;padding:36px 20px 80px}
     </div>
   </div>
 
-  <!-- CRITÉRIOS -->
-
-  <!-- BLOCO 1: Neurológico -->
   <div class="criteria-section">
     <div class="criteria-section-title">Neurológico</div>
     <div class="item" data-pts="4" data-id="glasgow" onclick="toggle(this)">
       <div class="item-inner">
-        <div class="item-checkbox">
-          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-            <path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <div class="item-checkbox"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <span class="item-text">Escala de Coma de Glasgow &lt; 15 pontos</span>
         <span class="item-badge">+4 pts</span>
       </div>
     </div>
-
     <div class="item" data-pts="5" data-id="avc" onclick="toggle(this)">
       <div class="item-inner">
-        <div class="item-checkbox">
-          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-            <path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <div class="item-checkbox"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <span class="item-text">AVC prévio (Acidente Vascular Cerebral)</span>
         <span class="item-badge">+5 pts</span>
       </div>
     </div>
   </div>
 
-  <!-- BLOCO 2: Cardiovascular -->
   <div class="criteria-section">
     <div class="criteria-section-title">Cardiovascular</div>
-
     <div class="item" data-pts="1" data-id="has" onclick="toggle(this)">
       <div class="item-inner">
-        <div class="item-checkbox">
-          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-            <path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <div class="item-checkbox"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <span class="item-text">Hipertensão Arterial Sistêmica (HAS)</span>
         <span class="item-badge">+1 pt</span>
       </div>
     </div>
-
     <div class="item" data-pts="7" data-id="icfer" onclick="toggle(this)">
       <div class="item-inner">
-        <div class="item-checkbox">
-          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-            <path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <div class="item-checkbox"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <span class="item-text">ICFER / Valvopatia cardíaca moderada / Uso de marcapasso (MP) / Bloqueio AV total (BAVT)</span>
         <span class="item-badge">+7 pts</span>
       </div>
     </div>
-
     <div class="item" data-pts="5" data-id="iam_alto" data-mutex="iam_baixo" onclick="toggle(this)">
       <div class="item-inner">
-        <div class="item-checkbox">
-          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-            <path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <div class="item-checkbox"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <span class="item-text">IAM prévio / Cateterismo com stent — capacidade funcional <strong>&gt; 4 METs</strong></span>
         <span class="item-badge">+5 pts</span>
       </div>
       <div class="item-note">⚑ Mutuamente exclusivo com o item abaixo</div>
     </div>
-
     <div class="item" data-pts="6" data-id="iam_baixo" data-mutex="iam_alto" onclick="toggle(this)">
       <div class="item-inner">
-        <div class="item-checkbox">
-          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-            <path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <div class="item-checkbox"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <span class="item-text">IAM prévio / Cateterismo com stent — capacidade funcional <strong>&lt; 4 METs</strong></span>
         <span class="item-badge">+6 pts</span>
       </div>
@@ -633,30 +204,19 @@ main{max-width:780px;margin:0 auto;padding:36px 20px 80px}
     </div>
   </div>
 
-  <!-- BLOCO 3: Metabólico -->
   <div class="criteria-section">
     <div class="criteria-section-title">Metabólico / Endócrino</div>
-
     <div class="item" data-pts="1" data-id="dm_nid" data-mutex="dm_id" onclick="toggle(this)">
       <div class="item-inner">
-        <div class="item-checkbox">
-          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-            <path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <div class="item-checkbox"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <span class="item-text">Diabetes <strong>não</strong> insulino-dependente (DM tipo 2 sem insulina)</span>
         <span class="item-badge">+1 pt</span>
       </div>
       <div class="item-note">⚑ Mutuamente exclusivo com diabetes insulino-dependente</div>
     </div>
-
     <div class="item" data-pts="2" data-id="dm_id" data-mutex="dm_nid" onclick="toggle(this)">
       <div class="item-inner">
-        <div class="item-checkbox">
-          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-            <path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <div class="item-checkbox"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <span class="item-text">Diabetes <strong>insulino-dependente</strong> (DM tipo 1 ou DM tipo 2 com insulina)</span>
         <span class="item-badge">+2 pts</span>
       </div>
@@ -664,30 +224,19 @@ main{max-width:780px;margin:0 auto;padding:36px 20px 80px}
     </div>
   </div>
 
-  <!-- BLOCO 4: Idade -->
   <div class="criteria-section">
-    <div class="criteria-section-title">Faixa etária</div>
-
+    <div class="criteria-section-title">Faixa Etária</div>
     <div class="item" data-pts="1" data-id="idade70" data-mutex="idade80" onclick="toggle(this)">
       <div class="item-inner">
-        <div class="item-checkbox">
-          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-            <path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <div class="item-checkbox"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <span class="item-text">Idade <strong>&gt; 70 anos</strong> e ≤ 80 anos</span>
         <span class="item-badge">+1 pt</span>
       </div>
       <div class="item-note">⚑ Se idade &gt; 80 anos, use o critério abaixo</div>
     </div>
-
     <div class="item" data-pts="2" data-id="idade80" data-mutex="idade70" onclick="toggle(this)">
       <div class="item-inner">
-        <div class="item-checkbox">
-          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-            <path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <div class="item-checkbox"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <span class="item-text">Idade <strong>&gt; 80 anos</strong></span>
         <span class="item-badge">+2 pts</span>
       </div>
@@ -695,56 +244,38 @@ main{max-width:780px;margin:0 auto;padding:36px 20px 80px}
     </div>
   </div>
 
-  <!-- BLOCO 5: Cirúrgico / Hematológico / Anestésico -->
   <div class="criteria-section">
     <div class="criteria-section-title">Cirúrgico · Hematológico · Anestésico</div>
-
     <div class="item" data-pts="3" data-id="reoperacao" onclick="toggle(this)">
       <div class="item-inner">
-        <div class="item-checkbox">
-          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-            <path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <div class="item-checkbox"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <span class="item-text">Mais de uma cirurgia de quadril no mesmo lado (reoperação)</span>
         <span class="item-badge">+3 pts</span>
       </div>
     </div>
-
     <div class="item" data-pts="3" data-id="anemia" onclick="toggle(this)">
       <div class="item-inner">
-        <div class="item-checkbox">
-          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-            <path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <span class="item-text">Hemoglobina &lt; 10 g/dL <em>ou</em> Hematócrito &lt; 30% <em>ou</em> transfusão sanguínea prévia à cirurgia</span>
+        <div class="item-checkbox"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="item-text">Hemoglobina &lt; 10 g/dL ou Hematócrito &lt; 30% ou transfusão sanguínea prévia à cirurgia</span>
         <span class="item-badge">+3 pts</span>
       </div>
     </div>
-
     <div class="item" data-pts="3" data-id="tot" onclick="toggle(this)">
       <div class="item-inner">
-        <div class="item-checkbox">
-          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-            <path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <div class="item-checkbox"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4.2 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <span class="item-text">Previsão de intubação traqueal orotraqueal (TOT) durante a cirurgia</span>
         <span class="item-badge">+3 pts</span>
       </div>
     </div>
   </div>
 
-  <!-- REF BOX -->
   <div class="ref-box">
-    <strong>Referência:</strong> Scapin HP. Avaliação de fatores de risco pré-operatórios para internação em UTI em cirurgias de quadril. 
-    Trabalho de Conclusão de Residência — Hospital Universitário Cajuru / PUC-PR, 2025. 
+    <strong>Referência:</strong> Scapin HP. Avaliação de fatores de risco pré-operatórios para internação em UTI em cirurgias de quadril.
+    Trabalho de Conclusão de Residência — Hospital Universitário Cajuru / PUC-PR, 2025.
     CEP nº 7.658.825 (CAAE: 88847425.6.0000.0020).
   </div>
 
-  <!-- SCORE STICKY PANEL -->
-  <div class="score-panel" id="scorePanel">
+  <div class="score-panel">
     <div class="score-display">
       <div>
         <div class="score-label">Pontuação</div>
@@ -753,18 +284,14 @@ main{max-width:780px;margin:0 auto;padding:36px 20px 80px}
     </div>
     <div class="score-divider"></div>
     <div class="score-risk">
-      <div class="risk-pill low" id="riskPill">
-        <div class="dot"></div>
-        <span id="riskText">Baixo Risco</span>
-      </div>
+      <div class="risk-pill low" id="riskPill"><div class="dot"></div><span id="riskText">Baixo Risco</span></div>
       <div class="risk-desc" id="riskDesc">≤ 7 pontos — não encaminhado à UTI</div>
     </div>
     <div class="score-panel-actions">
       <button class="btn btn-ghost" onclick="clearAll()">Limpar</button>
-      <button class="btn btn-primary" onclick="openModal()">Ver Resultado &amp; Exportar</button>
+      <button class="btn btn-primary" onclick="openModal()">Ver Resultado</button>
     </div>
   </div>
-
 </main>
 
 <!-- MODAL -->
@@ -788,39 +315,39 @@ main{max-width:780px;margin:0 auto;padding:36px 20px 80px}
       </div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-dark" onclick="exportExcel()">⬇ Exportar Excel</button>
+      <button class="btn btn-green" id="btnSalvar" onclick="salvarNoBanco()">&#9729; Salvar no Banco</button>
+      <button class="btn btn-dark" onclick="exportExcel()">&#11015; Baixar Excel</button>
       <button class="btn btn-outline" onclick="closeModal()">Fechar</button>
     </div>
   </div>
 </div>
 
-<script>
-// ── STATE ──
-const items = {};   // id -> {pts, label, checked}
-const mutexMap = {};
+<div class="toast" id="toast"></div>
 
-// collect all items on load
-document.querySelectorAll('.item').forEach(el => {
-  const id  = el.dataset.id;
-  const pts = parseInt(el.dataset.pts);
-  const lbl = el.querySelector('.item-text').innerText.trim();
-  items[id] = { pts, label: lbl, checked: false, el };
+<script>
+var SHEET_URL = 'https://script.google.com/macros/s/AKfycbz_tbLa5DRjmNa29O5j4W8lsDk0fHmnLO9QgVF_LZ-zOQ54OWnUio9UUb128aQ36cXOJA/exec';
+
+var items = {};
+var mutexMap = {};
+
+document.querySelectorAll('.item').forEach(function(el){
+  var id  = el.dataset.id;
+  var pts = parseInt(el.dataset.pts);
+  var lbl = el.querySelector('.item-text').innerText.trim();
+  items[id] = { pts: pts, label: lbl, checked: false, el: el };
   if(el.dataset.mutex) mutexMap[id] = el.dataset.mutex;
 });
 
-// set today's date
 document.getElementById('data').valueAsDate = new Date();
 
 function toggle(el){
-  const id = el.dataset.id;
-  const state = items[id];
-
+  var id = el.dataset.id;
+  var state = items[id];
   if(state.checked){
     state.checked = false;
     el.classList.remove('checked');
   } else {
-    // handle mutex
-    const mxId = mutexMap[id];
+    var mxId = mutexMap[id];
     if(mxId && items[mxId].checked){
       items[mxId].checked = false;
       items[mxId].el.classList.remove('checked');
@@ -832,40 +359,50 @@ function toggle(el){
 }
 
 function calcScore(){
-  return Object.values(items).filter(i=>i.checked).reduce((s,i)=>s+i.pts,0);
+  return Object.values(items).filter(function(i){ return i.checked; }).reduce(function(s,i){ return s+i.pts; },0);
 }
 
 function updateScore(){
-  const score = calcScore();
-  const high  = score > 7;
+  var score = calcScore();
+  var high  = score > 7;
   document.getElementById('scoreNum').textContent = score;
-  const pill  = document.getElementById('riskPill');
+  var pill = document.getElementById('riskPill');
   pill.className = 'risk-pill ' + (high ? 'high' : 'low');
-  document.getElementById('riskText').textContent  = high ? 'Alto Risco' : 'Baixo Risco';
-  document.getElementById('riskDesc').textContent  = high
+  document.getElementById('riskText').textContent = high ? 'Alto Risco' : 'Baixo Risco';
+  document.getElementById('riskDesc').textContent = high
     ? '> 7 pontos — encaminhamento para UTI recomendado'
     : '≤ 7 pontos — não encaminhado à UTI';
 }
 
 function clearAll(){
-  Object.values(items).forEach(i=>{
-    i.checked = false;
-    i.el.classList.remove('checked');
-  });
+  Object.values(items).forEach(function(i){ i.checked=false; i.el.classList.remove('checked'); });
   updateScore();
 }
 
 function getChecked(){
-  return Object.values(items).filter(i=>i.checked);
+  return Object.values(items).filter(function(i){ return i.checked; });
+}
+
+function formatDate(str){
+  if(!str) return '';
+  var parts = str.split('-');
+  return parts[2]+'/'+parts[1]+'/'+parts[0];
+}
+
+function showToast(msg, type){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (type||'');
+  setTimeout(function(){ t.className='toast'; }, 3500);
 }
 
 function openModal(){
-  const score   = calcScore();
-  const high    = score > 7;
-  const nome    = document.getElementById('nome').value || 'Não informado';
-  const pront   = document.getElementById('prontuario').value;
-  const data    = document.getElementById('data').value;
-  const checked = getChecked();
+  var score   = calcScore();
+  var high    = score > 7;
+  var nome    = document.getElementById('nome').value || 'Não informado';
+  var pront   = document.getElementById('prontuario').value;
+  var data    = document.getElementById('data').value;
+  var checked = getChecked();
 
   document.getElementById('modalScore').textContent = score;
   document.getElementById('modalScore').className = 'result-num ' + (high ? 'high' : 'low');
@@ -875,26 +412,30 @@ function openModal(){
     high ? 'Pontuação > 7: encaminhamento para UTI pós-operatória recomendado.'
          : 'Pontuação ≤ 7: paciente classificado como baixo risco para necessidade de UTI.';
   document.getElementById('modalPatientLabel').textContent =
-    nome + (pront ? ' · Prontuário: ' + pront : '') + (data ? ' · ' + formatDate(data) : '');
+    nome + (pront ? ' · Prontuário: '+pront : '') + (data ? ' · '+formatDate(data) : '');
 
-  const list = document.getElementById('modalCriteriaList');
+  var list = document.getElementById('modalCriteriaList');
   list.innerHTML = '';
   if(checked.length===0){
     list.innerHTML = '<div class="no-criteria">Nenhum critério selecionado</div>';
   } else {
-    checked.forEach(i=>{
-      const row = document.createElement('div');
+    checked.forEach(function(i){
+      var row = document.createElement('div');
       row.className = 'crit-row';
-      row.innerHTML = `<span class="crit-name">${i.label}</span><span class="crit-pts">+${i.pts} pts</span>`;
+      row.innerHTML = '<span class="crit-name">'+i.label+'</span><span class="crit-pts">+'+i.pts+' pts</span>';
       list.appendChild(row);
     });
-    // total row
-    const tot = document.createElement('div');
+    var tot = document.createElement('div');
     tot.className = 'crit-row';
-    tot.style.fontWeight='600';
-    tot.innerHTML = `<span class="crit-name">TOTAL</span><span class="crit-pts" style="color:var(--ink)">${score} pts</span>`;
+    tot.style.fontWeight = '600';
+    tot.innerHTML = '<span class="crit-name">TOTAL</span><span class="crit-pts" style="color:var(--ink)">'+score+' pts</span>';
     list.appendChild(tot);
   }
+
+  var btn = document.getElementById('btnSalvar');
+  btn.disabled = false;
+  btn.textContent = '☁ Salvar no Banco';
+  btn.style.background = '';
 
   document.getElementById('modalOverlay').classList.add('open');
 }
@@ -902,77 +443,108 @@ function openModal(){
 function closeModal(){
   document.getElementById('modalOverlay').classList.remove('open');
 }
-document.getElementById('modalOverlay').addEventListener('click', e=>{
+document.getElementById('modalOverlay').addEventListener('click', function(e){
   if(e.target===e.currentTarget) closeModal();
 });
 
-function formatDate(str){
-  if(!str) return '';
-  const [y,m,d] = str.split('-');
-  return `${d}/${m}/${y}`;
+function salvarNoBanco(){
+  var btn = document.getElementById('btnSalvar');
+  btn.disabled = true;
+  btn.textContent = '⏳ Salvando…';
+
+  var score    = calcScore();
+  var high     = score > 7;
+  var nome     = document.getElementById('nome').value || '';
+  var pront    = document.getElementById('prontuario').value || '';
+  var data     = document.getElementById('data').value || '';
+  var cirurgia = document.getElementById('cirurgia').value || '';
+  var avaliador= document.getElementById('avaliador').value || '';
+  var checked  = getChecked();
+
+  var payload = {
+    data:          formatDate(data),
+    nome:          nome,
+    prontuario:    pront,
+    cirurgia:      cirurgia,
+    avaliador:     avaliador,
+    pontuacao:     score,
+    classificacao: high ? 'ALTO RISCO (> 7 pts)' : 'BAIXO RISCO (≤ 7 pts)',
+    criterios:     checked.map(function(i){ return i.label; }).join(' | ')
+  };
+
+  fetch(SHEET_URL, {
+    method: 'POST',
+    mode:   'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(function(){
+    btn.textContent = '✓ Salvo!';
+    btn.style.background = 'var(--safe)';
+    showToast('✓ Registro salvo no banco de dados!', 'success');
+  }).catch(function(){
+    btn.disabled = false;
+    btn.textContent = '☁ Salvar no Banco';
+    showToast('Erro ao salvar. Verifique a conexão.', 'error');
+  });
 }
 
 function exportExcel(){
-  const score   = calcScore();
-  const high    = score > 7;
-  const nome    = document.getElementById('nome').value    || '';
-  const pront   = document.getElementById('prontuario').value || '';
-  const data    = document.getElementById('data').value    || '';
-  const cirurgia= document.getElementById('cirurgia').value || '';
-  const avaliador=document.getElementById('avaliador').value || '';
-  const checked = getChecked();
+  var score    = calcScore();
+  var high     = score > 7;
+  var nome     = document.getElementById('nome').value || '';
+  var pront    = document.getElementById('prontuario').value || '';
+  var data     = document.getElementById('data').value || '';
+  var cirurgia = document.getElementById('cirurgia').value || '';
+  var avaliador= document.getElementById('avaliador').value || '';
+  var checked  = getChecked();
 
-  const wb = XLSX.utils.book_new();
+  var wb = XLSX.utils.book_new();
 
-  /* ─ Sheet 1: Resumo ─ */
-  const resumo = [
+  var resumo = [
     ['ESCORE DE RISCO PRÉ-OPERATÓRIO PARA INTERNAÇÃO EM UTI – CIRURGIAS DE QUADRIL'],
     ['Referência: Scapin HP, Hospital Universitário Cajuru / PUC-PR, 2025'],
     [],
     ['DADOS DO PACIENTE'],
-    ['Nome',          nome],
-    ['Prontuário',    pront],
+    ['Nome', nome],
+    ['Prontuário', pront],
     ['Data de avaliação', formatDate(data)],
-    ['Tipo de cirurgia',  cirurgia],
-    ['Avaliador',    avaliador],
+    ['Tipo de cirurgia', cirurgia],
+    ['Avaliador', avaliador],
     [],
     ['RESULTADO'],
-    ['Pontuação total',    score],
-    ['Classificação',     high ? 'ALTO RISCO (> 7 pts) – Encaminhamento para UTI recomendado'
-                               : 'BAIXO RISCO (≤ 7 pts) – Sem necessidade de UTI'],
+    ['Pontuação total', score],
+    ['Classificação', high ? 'ALTO RISCO (> 7 pts) – Encaminhamento para UTI recomendado'
+                           : 'BAIXO RISCO (≤ 7 pts) – Sem necessidade de UTI'],
     [],
     ['CRITÉRIOS POSITIVOS'],
-    ['Critério', 'Pontuação'],
-    ...checked.map(i=>[i.label, i.pts]),
-    checked.length===0 ? ['Nenhum critério selecionado', ''] : [],
-    [],
-    ['TOTAL', score],
-  ].filter(r=>r!==undefined);
+    ['Critério', 'Pontuação']
+  ];
+  checked.forEach(function(i){ resumo.push([i.label, i.pts]); });
+  if(checked.length===0) resumo.push(['Nenhum critério selecionado','']);
+  resumo.push([]);
+  resumo.push(['TOTAL', score]);
 
-  const ws1 = XLSX.utils.aoa_to_sheet(resumo);
+  var ws1 = XLSX.utils.aoa_to_sheet(resumo);
   ws1['!cols'] = [{wch:62},{wch:20}];
   XLSX.utils.book_append_sheet(wb, ws1, 'Resultado');
 
-  /* ─ Sheet 2: Todos os critérios ─ */
-  const allRows = [
+  var allRows = [
     ['TABELA COMPLETA DO ESCORE'],
     [],
-    ['Critério', 'Pontuação possível', 'Selecionado', 'Pontuação aplicada'],
-    ...Object.values(items).map(i=>[
-      i.label,
-      i.pts,
-      i.checked ? 'SIM' : 'NÃO',
-      i.checked ? i.pts : 0,
-    ]),
-    [],
-    ['','','TOTAL APLICADO', score],
-    ['','','Estratificação', high ? '> 7 pts → UTI' : '≤ 7 pts → Sem UTI'],
+    ['Critério','Pontuação possível','Selecionado','Pontuação aplicada']
   ];
-  const ws2 = XLSX.utils.aoa_to_sheet(allRows);
+  Object.values(items).forEach(function(i){
+    allRows.push([i.label, i.pts, i.checked?'SIM':'NÃO', i.checked?i.pts:0]);
+  });
+  allRows.push([]);
+  allRows.push(['','','TOTAL APLICADO', score]);
+  allRows.push(['','','Estratificação', high?'> 7 pts → UTI':'≤ 7 pts → Sem UTI']);
+
+  var ws2 = XLSX.utils.aoa_to_sheet(allRows);
   ws2['!cols'] = [{wch:62},{wch:22},{wch:14},{wch:18}];
   XLSX.utils.book_append_sheet(wb, ws2, 'Critérios Completos');
 
-  const fileName = `Escore_UTI_Quadril_${(nome||'paciente').replace(/\s+/g,'_')}_${data||'sem_data'}.xlsx`;
+  var fileName = 'Escore_UTI_Quadril_'+(nome||'paciente').replace(/\s+/g,'_')+'_'+(data||'sem_data')+'.xlsx';
   XLSX.writeFile(wb, fileName);
 }
 </script>
